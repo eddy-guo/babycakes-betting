@@ -7,7 +7,7 @@ export default function Home() {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:5000/api/game-stats?id=203999&date=05/07/2023")
+    axios.get("http://127.0.0.1:5000/api/live-game?id=203999&date=05/07/2023")
       .then(response => {
         setStats(response.data);
       })
