@@ -5,12 +5,21 @@ import axios from "axios";
 
 export default function Home() {
   const [seasonStats, setSeasonStats] = useState(null);
+  const [liveStats, setLiveStats] = useState(null);
 
   useEffect(() => {
     axios
       .get("/api/stats?name=Jamal%20Murray&season=2022&season_type=Playoffs")
       .then((response) => {
         setSeasonStats(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    axios
+      .get("/api/boxscore")
+      .then((response) => {
+        setLiveStats(response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -95,6 +104,7 @@ export default function Home() {
     <div>
       <h1>Playoff Stats: Jamal Murray</h1>
       {renderGameStats()}
+      <pre>{JSON.stringify(liveStats, null, 2)}</pre>
     </div>
   );
 }
