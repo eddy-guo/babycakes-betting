@@ -27,20 +27,3 @@ def create_gamelog():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-# add to indexjs
-# start indexjs input values (frontend)
-
-'''
-jokic_rs = pd.concat(create_gamelog(jokic["id"], ["2022", "2023"], "Regular Season").get_data_frames())
-jokic_po = pd.concat(create_gamelog(jokic["id"], ["2022", "2023"], "Playoffs").get_data_frames())
-
-jokic_rs_stats = pd.DataFrame(data=jokic_rs, columns=("MIN", "PTS", "REB", "AST", "STL", "BLK"))
-jokic_po_stats = pd.DataFrame(data=jokic_po, columns=("MIN", "PTS", "REB", "AST", "STL", "BLK"))
-
-jokic_rs_average = jokic_rs_stats.mean(axis="index")
-jokic_po_average = jokic_po_stats.mean(axis="index")
-
-jokic_rs_over30 = jokic_rs_stats[jokic_rs_stats["PTS"] >= 30]
-jokic_po_over30 = jokic_po_stats[jokic_po_stats["PTS"] >= 30]
-'''
