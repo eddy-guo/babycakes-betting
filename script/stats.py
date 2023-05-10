@@ -19,7 +19,6 @@ def create_gamelog():
         id = [x for x in player if x["full_name"] == name][0]["id"]
         
         data = playergamelog.PlayerGameLog(player_id=id, season=season, season_type_all_star=season_type).get_data_frames()[0]
-        # popular_stats = pd.DataFrame(data=data[0], columns=("MIN", "PTS", "REB", "AST", "STL", "BLK"))
         if data.empty:
              return jsonify({'Error': 'Stats do not exist.'}), 404
         response = data.to_dict() # orient="records"
