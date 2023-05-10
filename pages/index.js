@@ -1,40 +1,72 @@
-import Head from 'next/head';
-import styles from '../styles/Home.module.css';
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import Head from "next/head";
+import styles from "../styles/Home.module.css";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function Home() {
-  const [liveStats, setLiveStats] = useState(null);
   const [seasonStats, setSeasonStats] = useState(null);
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:5000/api/live-game?id=203999&date=05/07/2023")
-      .then(response => {
-        setLiveStats(response.data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-    axios.get("/api/stats?name=Jamal%20Murray&season=2022&season_type=Playoffs")
-      .then(response => {
+    axios
+      .get("/api/stats?name=Jamal%20Murray&season=2022&season_type=Playoffs")
+      .then((response) => {
         setSeasonStats(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }, []);
 
+  const renderGameStats = () => {
+    if (!seasonStats) return null;
+    const matchup = Object.values(seasonStats["MATCHUP"]);
+    const date = Object.values(seasonStats["GAME_DATE"]);
+    const murrayMinutes = Object.values(seasonStats["MIN"]);
+    const murrayPoints = Object.values(seasonStats["PTS"]);
+    const murrayRebounds = Object.values(seasonStats["REB"]);
+    const murrayAssists = Object.values(seasonStats["AST"]);
+    const murraySteals = Object.values(seasonStats["STL"]);
+    const murrayBlocks = Object.values(seasonStats["BLK"]);
+    const win_loss = Object.values(seasonStats["WL"]);
+
+    const gameStats = matchup.map((matchup, index) => (
+      <tr key={index}>
+        <td>{matchup}</td>
+        <td>{date[index]}</td>
+        <td>{murrayPoints[index]}</td>
+        <td>{murrayRebounds[index]}</td>
+        <td>{murrayAssists[index]}</td>
+        <td>{murraySteals[index]}</td>
+        <td>{murrayBlocks[index]}</td>
+        <td>{murrayMinutes[index]}</td>
+        <td>{win_loss[index]}</td>
+      </tr>
+    ));
+
+    return (
+      <table>
+        <thead>
+          <tr>
+            <th>Game</th>
+            <th>Date</th>
+            <th>Points</th>
+            <th>Rebounds</th>
+            <th>Assists</th>
+            <th>Steals</th>
+            <th>Blocks</th>
+            <th>Minutes</th>
+            <th>Win/Loss</th>
+          </tr>
+        </thead>
+        <tbody>{gameStats}</tbody>
+      </table>
+    );
+  };
+
   return (
     <div>
-      <h1>Game Stats</h1>
-      {liveStats && (
-        <pre>{JSON.stringify(liveStats, null, 2)}</pre>
-      )}
-      <h1>Career Stats</h1>
-      {seasonStats && (
-        <pre>{JSON.stringify(seasonStats, null, 2)}</pre>
-      )}
+      <h1>Playoff Stats: Jamal Murray</h1>
+      {renderGameStats()}
     </div>
-    
   );
 }
