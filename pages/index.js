@@ -21,13 +21,28 @@ export default function Home() {
     if (!seasonStats) return null;
     const matchup = Object.values(seasonStats["MATCHUP"]);
     const date = Object.values(seasonStats["GAME_DATE"]);
-    const murrayMinutes = Object.values(seasonStats["MIN"]);
     const murrayPoints = Object.values(seasonStats["PTS"]);
     const murrayRebounds = Object.values(seasonStats["REB"]);
     const murrayAssists = Object.values(seasonStats["AST"]);
     const murraySteals = Object.values(seasonStats["STL"]);
     const murrayBlocks = Object.values(seasonStats["BLK"]);
+    const murrayMinutes = Object.values(seasonStats["MIN"]);
     const win_loss = Object.values(seasonStats["WL"]);
+
+    function getAverage(stat_arr) {
+      const sum = stat_arr.reduce((x, y) => x + y, 0);
+      return sum / stat_arr.length;
+    }
+
+    function getWLRatio(wl_arr, char) {
+      var counter = 0;
+      for (let i = 0; i < wl_arr.length; i++) {
+        if (wl_arr[i] == char) {
+          counter += 1;
+        }
+      }
+      return counter;
+    }
 
     const gameStats = matchup.map((matchup, index) => (
       <tr key={index}>
@@ -44,7 +59,7 @@ export default function Home() {
     ));
 
     return (
-      <table>
+      <table id="game_stats">
         <thead>
           <tr>
             <th>Game</th>
@@ -58,7 +73,20 @@ export default function Home() {
             <th>Win/Loss</th>
           </tr>
         </thead>
-        <tbody>{gameStats}</tbody>
+        <tbody>
+          {gameStats}
+          <tr>
+            <td>Playoff Average</td>
+            <td>n/a</td>
+            <td>{getAverage(murrayPoints)}</td>
+            <td>{getAverage(murrayRebounds)}</td>
+            <td>{getAverage(murrayAssists)}</td>
+            <td>{getAverage(murraySteals)}</td>
+            <td>{getAverage(murrayBlocks)}</td>
+            <td>{getAverage(murrayMinutes)}</td>
+            <td>{getWLRatio(win_loss, "W")}-{getWLRatio(win_loss, "L")}</td>
+          </tr>
+        </tbody>
       </table>
     );
   };
