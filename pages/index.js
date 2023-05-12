@@ -24,18 +24,18 @@ export default function Home() {
 
   useEffect(() => {
     axios
-      .all([
-        axios.get(
-          "/api/stats?name=Jamal%20Murray&season=2022&season_type=Playoffs"
-        ),
-        axios.get("/api/boxscore"),
-      ])
-      .then(
-        axios.spread((statsResponse, boxscoreResponse) => {
-          setSeasonStats(statsResponse.data);
-          setLiveStats(boxscoreResponse.data);
-        })
-      )
+      .get("/api/stats?name=Jamal%20Murray&season=2022&season_type=Playoffs")
+      .then((response) => {
+        setSeasonStats(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    axios
+      .get("/api/boxscore")
+      .then((response) => {
+        setLiveStats(response.data);
+      })
       .catch((error) => {
         console.error(error);
       });
@@ -111,18 +111,26 @@ export default function Home() {
 
     function findPlayer(name) {
       if (name) {
-        for (let i = 0; i < liveStats["game"]["homeTeam"]["players"].length; i++) {
+        for (
+          let i = 0;
+          i < liveStats["game"]["homeTeam"]["players"].length;
+          i++
+        ) {
           if (liveStats["game"]["homeTeam"]["players"][i]["name"] == name) {
-            return liveStats["game"]["homeTeam"]["players"][i]
+            return liveStats["game"]["homeTeam"]["players"][i];
           }
         }
-        for (let i = 0; i < liveStats["game"]["awayTeam"]["players"].length; i++) {
+        for (
+          let i = 0;
+          i < liveStats["game"]["awayTeam"]["players"].length;
+          i++
+        ) {
           if (liveStats["game"]["awayTeam"]["players"][i]["name"] == name) {
-            return liveStats["game"]["awayTeam"]["players"][i]
+            return liveStats["game"]["awayTeam"]["players"][i];
           }
         }
       } else {
-        return "Player is null/not in current game."
+        return "Player is null/not in current game.";
       }
     }
 
@@ -131,10 +139,13 @@ export default function Home() {
         <p>Game ID: {liveStats["game"]["gameId"]}</p>
         <p>Game Status: {liveStats["game"]["gameStatusText"]}</p>
         <p>Game Clock: {liveStats["game"]["gameClock"]}</p>
-        <p>Jamal Murray Live Game Stats: {JSON.stringify(findPlayer("Jamal Murray"), null, 2)}</p>
+        <p>
+          Jamal Murray Live Game Stats:{" "}
+          {JSON.stringify(findPlayer("Jamal Murray"), null, 2)}
+        </p>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div>

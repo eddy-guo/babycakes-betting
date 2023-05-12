@@ -7,8 +7,6 @@ import pandas as pd
 app = Flask(__name__)
 
 player = players.get_players()
-jokic = [x for x in player if x["full_name"] == "Nikola Jokic"][0]
-murray = [x for x in player if x["full_name"] == "Jamal Murray"][0]
 
 @app.route('/api/stats')
 def create_gamelog():
