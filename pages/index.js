@@ -5,7 +5,7 @@ import axios from "axios";
 
 function getAverage(stat_arr) {
   const sum = stat_arr.reduce((x, y) => x + y, 0);
-  return sum / stat_arr.length;
+  return (sum / stat_arr.length).toFixed(1);
 }
 
 function getWLRatio(wl_arr, char) {
@@ -23,25 +23,52 @@ export default function Home() {
   const [liveStats, setLiveStats] = useState(null);
 
   useEffect(() => {
-    axios.all([
-      axios.get('/api/stats?name=Jamal%20Murray&season=2022&season_type=Playoffs'),
-      axios.get('/api/boxscore')
-    ]).then(axios.spread((statsResponse, boxscoreResponse) => {
-      setSeasonStats(statsResponse.data);
-      setLiveStats(boxscoreResponse.data);
-    })).catch((error) => {
-      console.error(error);
-    });
+    axios
+      .all([
+        axios.get(
+          "/api/stats?name=Jamal%20Murray&season=2022&season_type=Playoffs"
+        ),
+        axios.get("/api/boxscore"),
+      ])
+      .then(
+        axios.spread((statsResponse, boxscoreResponse) => {
+          setSeasonStats(statsResponse.data);
+          setLiveStats(boxscoreResponse.data);
+        })
+      )
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
-  const renderGameStats = () => {
-    if (!seasonStats) return "Loading...";
+  const renderSeasonStats = () => {
+    if (!seasonStats) return "Loading... (run stats.py!)";
 
-    const headerLabels = ["Game", "Date", "Points", "Rebounds", "Assists", "Steals", "Blocks", "Minutes", "Win/Loss"];
-    const statKeys = ["MATCHUP", "GAME_DATE", "PTS", "REB", "AST", "STL", "BLK", "MIN", "WL"];
-    
+    const headerLabels = [
+      "Game",
+      "Date",
+      "Points",
+      "Rebounds",
+      "Assists",
+      "Steals",
+      "Blocks",
+      "Minutes",
+      "Win/Loss",
+    ];
+    const statKeys = [
+      "MATCHUP",
+      "GAME_DATE",
+      "PTS",
+      "REB",
+      "AST",
+      "STL",
+      "BLK",
+      "MIN",
+      "WL",
+    ];
+
     const columnHeaders = headerLabels.map((key, index) => (
-    <th key={index}>{key}</th>
+      <th key={index}>{key}</th>
     ));
 
     const gameStats = statKeys.map((matchup, index) => (
@@ -52,9 +79,11 @@ export default function Home() {
       </tr>
     ));
 
-    const gameAverages = statKeys.slice(2, 8).map((key) => (
-      <td key={key}>{getAverage(Object.values(seasonStats[key]))}</td>
-    ));
+    const gameAverages = statKeys
+      .slice(2, 8)
+      .map((key) => (
+        <td key={key}>{getAverage(Object.values(seasonStats[key]))}</td>
+      ));
 
     return (
       <table>
@@ -67,18 +96,51 @@ export default function Home() {
             <td>Playoff Average</td>
             <td>n/a</td>
             {gameAverages}
-            <td>{getWLRatio(Object.values(seasonStats["WL"]), "W")}-{getWLRatio(Object.values(seasonStats["WL"]), "L")}</td>
+            <td>
+              {getWLRatio(Object.values(seasonStats["WL"]), "W")}-
+              {getWLRatio(Object.values(seasonStats["WL"]), "L")}
+            </td>
           </tr>
         </tbody>
       </table>
     );
   };
 
+  const renderLiveStats = () => {
+    if (!liveStats) return;
+
+    function findPlayer(name) {
+      if (name) {
+        for (let i = 0; i < liveStats["game"]["homeTeam"]["players"].length; i++) {
+          if (liveStats["game"]["homeTeam"]["players"][i]["name"] == name) {
+            return liveStats["game"]["homeTeam"]["players"][i]
+          }
+        }
+        for (let i = 0; i < liveStats["game"]["awayTeam"]["players"].length; i++) {
+          if (liveStats["game"]["awayTeam"]["players"][i]["name"] == name) {
+            return liveStats["game"]["awayTeam"]["players"][i]
+          }
+        }
+      } else {
+        return "Player is null/not in current game."
+      }
+    }
+
+    return (
+      <div>
+        <p>Game ID: {liveStats["game"]["gameId"]}</p>
+        <p>Game Status: {liveStats["game"]["gameStatusText"]}</p>
+        <p>Game Clock: {liveStats["game"]["gameClock"]}</p>
+        <p>Jamal Murray Live Game Stats: {JSON.stringify(findPlayer("Jamal Murray"), null, 2)}</p>
+      </div>
+    )
+  }
+
   return (
     <div>
       <h1>Playoff Stats: Jamal Murray</h1>
-      {renderGameStats()}
-      <pre>{JSON.stringify(liveStats, null, 2)}</pre>
+      {renderSeasonStats()}
+      {renderLiveStats()}
     </div>
   );
 }
