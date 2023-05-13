@@ -86,23 +86,26 @@ export default function Home() {
       ));
 
     return (
-      <table>
-        <thead>
-          <tr>{columnHeaders}</tr>
-        </thead>
-        <tbody>
-          {gameStats}
-          <tr>
-            <td>Playoff Average</td>
-            <td>n/a</td>
-            {gameAverages}
-            <td>
-              {getWLRatio(Object.values(seasonStats["WL"]), "W")}-
-              {getWLRatio(Object.values(seasonStats["WL"]), "L")}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div>
+        <h1>Jamal Murray Playoff Stats</h1>
+        <table>
+          <thead>
+            <tr>{columnHeaders}</tr>
+          </thead>
+          <tbody>
+            {gameStats}
+            <tr>
+              <td>Playoff Average</td>
+              <td>n/a</td>
+              {gameAverages}
+              <td>
+                {getWLRatio(Object.values(seasonStats["WL"]), "W")}-
+                {getWLRatio(Object.values(seasonStats["WL"]), "L")}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     );
   };
 
@@ -134,22 +137,26 @@ export default function Home() {
       }
     }
 
+    const jamalMurray = findPlayer("Jamal Murray");
+
     return (
       <div>
+        <h1>Jamal Murray Live Game Stats</h1>
         <p>Game ID: {liveStats["game"]["gameId"]}</p>
         <p>Game Status: {liveStats["game"]["gameStatusText"]}</p>
         <p>Game Clock: {liveStats["game"]["gameClock"]}</p>
-        <p>
-          Jamal Murray Live Game Stats:{" "}
-          {JSON.stringify(findPlayer("Jamal Murray"), null, 2)}
-        </p>
+        <p>Points: {jamalMurray["statistics"]["points"]}</p>
+        <p>Rebounds: {jamalMurray["statistics"]["reboundsTotal"]}</p>
+        <p>Assists: {jamalMurray["statistics"]["assists"]}</p>
+        <p>Steals: {jamalMurray["statistics"]["steals"]}</p>
+        <p>Blocks: {jamalMurray["statistics"]["blocks"]}</p>
+        <p>Minutes: {jamalMurray["statistics"]["minutesCalculated"]}</p>
       </div>
     );
   };
 
   return (
     <div>
-      <h1>Playoff Stats: Jamal Murray</h1>
       {renderSeasonStats()}
       {renderLiveStats()}
     </div>
