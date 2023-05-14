@@ -48,21 +48,20 @@ def temp():
     games = scoreboard.ScoreBoard()
     # args go here(?)
 
-    live = []
+    live = ["0042200226", "0042200216"]
 
     if games.get_dict()["scoreboard"]["games"]:
         for games in games.get_dict()["scoreboard"]["games"]:
             if games["gameStatusText"] != "Final":
                 live.append(games["gameId"])
     # TEMP, no games live during testing (boxscorejs also needs change)
-    return "0042200226"
+    return live
 
 
 if __name__ == '__main__':
     app.run(debug=True)
 
 # LIVE:
-# live game id from temp -> boxscore
 # input box for player name
 
 # STATS:

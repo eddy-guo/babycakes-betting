@@ -87,7 +87,6 @@ export default function Home() {
 
     return (
       <div>
-        <h1>Jamal Murray Playoff Stats</h1>
         <table>
           <thead>
             <tr>{columnHeaders}</tr>
@@ -109,56 +108,66 @@ export default function Home() {
     );
   };
 
-  const renderLiveStats = () => {
+  const renderLiveStats = (index) => {
     if (!liveStats) return;
 
     function findPlayer(name) {
       if (name) {
         for (
           let i = 0;
-          i < liveStats["game"]["homeTeam"]["players"].length;
+          i < liveStats[index]["game"]["homeTeam"]["players"].length;
           i++
         ) {
-          if (liveStats["game"]["homeTeam"]["players"][i]["name"] == name) {
-            return liveStats["game"]["homeTeam"]["players"][i];
+          if (
+            liveStats[index]["game"]["homeTeam"]["players"][i]["name"] == name
+          ) {
+            return liveStats[index]["game"]["homeTeam"]["players"][i];
           }
         }
         for (
           let i = 0;
-          i < liveStats["game"]["awayTeam"]["players"].length;
+          i < liveStats[index]["game"]["awayTeam"]["players"].length;
           i++
         ) {
-          if (liveStats["game"]["awayTeam"]["players"][i]["name"] == name) {
-            return liveStats["game"]["awayTeam"]["players"][i];
+          if (
+            liveStats[index]["game"]["awayTeam"]["players"][i]["name"] == name
+          ) {
+            return liveStats[index]["game"]["awayTeam"]["players"][i];
           }
         }
       } else {
-        return "Player is null/not in current game.";
+        return "Invalid input.";
       }
     }
 
-    const jamalMurray = findPlayer("Jamal Murray");
+    if (findPlayer("Jamal Murray") == null) {
+      return "Player is not currently playing.";
+    }
+
+    const player = findPlayer("Jamal Murray");
 
     return (
       <div>
-        <h1>Jamal Murray Live Game Stats</h1>
-        <p>Game ID: {liveStats["game"]["gameId"]}</p>
-        <p>Game Status: {liveStats["game"]["gameStatusText"]}</p>
-        <p>Game Clock: {liveStats["game"]["gameClock"]}</p>
-        <p>Points: {jamalMurray["statistics"]["points"]}</p>
-        <p>Rebounds: {jamalMurray["statistics"]["reboundsTotal"]}</p>
-        <p>Assists: {jamalMurray["statistics"]["assists"]}</p>
-        <p>Steals: {jamalMurray["statistics"]["steals"]}</p>
-        <p>Blocks: {jamalMurray["statistics"]["blocks"]}</p>
-        <p>Minutes: {jamalMurray["statistics"]["minutesCalculated"]}</p>
+        <p>Live Game {index+1}</p>
+        <p>Game ID: {liveStats[index]["game"]["gameId"]}</p>
+        <p>Game Status: {liveStats[index]["game"]["gameStatusText"]}</p>
+        <p>Game Clock: {liveStats[index]["game"]["gameClock"]}</p>
+        <p>Points: {player["statistics"]["points"]}</p>
+        <p>Rebounds: {player["statistics"]["reboundsTotal"]}</p>
+        <p>Assists: {player["statistics"]["assists"]}</p>
+        <p>Steals: {player["statistics"]["steals"]}</p>
+        <p>Blocks: {player["statistics"]["blocks"]}</p>
+        <p>Minutes: {player["statistics"]["minutesCalculated"]}</p>
       </div>
     );
   };
 
   return (
     <div>
+      <h1>Jamal Murray Playoff Stats</h1>
       {renderSeasonStats()}
-      {renderLiveStats()}
+      <h1>Jamal Murray Live Game Stats</h1>
+      {liveStats && liveStats.map((value, index) => renderLiveStats(index))}
     </div>
   );
 }

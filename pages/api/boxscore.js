@@ -2,10 +2,18 @@ import axios from "axios";
 
 export default async function handler(req, res) {
   const gameIdResponse = await axios.get("http://127.0.0.1:5000/api/livegameid");
-  var gameId = gameIdResponse.data
+  const gameId = gameIdResponse.data;
+  const idArray = [];
 
-  const response = await axios.get(
-    `https://cdn.nba.com/static/json/liveData/boxscore/boxscore_${gameId}.json`
-  );
-  res.status(200).json(response.data);
+  for (let i = 0; i < gameId.length; i++) {
+    const response = axios.get(
+      `https://cdn.nba.com/static/json/liveData/boxscore/boxscore_${gameId[i]}.json`
+    );
+    idArray.push(response);
+  }
+
+  const boxscoreResponses = await Promise.all(idArray);
+  const boxscores = boxscoreResponses.map((response) => response.data);
+
+  return res.json(boxscores);
 }
