@@ -43,24 +43,23 @@ def create_gamelog_over30():
     return jsonify(response), 200, {'Access-Control-Allow-Origin': '*'}
 
 
-@app.route('/api/live')
+@app.route('/api/livegameid')
 def temp():
     games = scoreboard.ScoreBoard()
     # args go here(?)
 
     live = []
 
-    if not games.get_dict()["scoreboard"]["games"]:
-        return "No games playing currently."
-    else:
+    if games.get_dict()["scoreboard"]["games"]:
         for games in games.get_dict()["scoreboard"]["games"]:
             if games["gameStatusText"] != "Final":
                 live.append(games["gameId"])
-    return live
+    # TEMP, no games live during testing (boxscorejs also needs change)
+    return "0042200226"
 
 
 if __name__ == '__main__':
-    app.run(port=8000, debug=True)
+    app.run(debug=True)
 
 # LIVE:
 # live game id from temp -> boxscore
