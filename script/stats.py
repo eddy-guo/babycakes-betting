@@ -61,8 +61,14 @@ def temp():
 if __name__ == '__main__':
     app.run(debug=True)
 
-# LIVE:
-# input box for player name
+# Home page with one input box
+# submit player name, then routes to another page 
+# - link can have id as the backslash, thus very easy to route
+#   - on submit, redirect to link/id
+#   - when searching for id, go in link (chatgpt this part)
+# - shows regular season stats
+# - shows playoff stats (if applicable, include check)
+# - shows livegame stats (if applicable)
 
 # STATS:
 # over/under specific number (go back to pandas, but how to populate?)
