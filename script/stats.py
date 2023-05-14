@@ -48,7 +48,7 @@ def temp():
     games = scoreboard.ScoreBoard()
     # args go here(?)
 
-    live = ["0042200226", "0042200216"]
+    live = ["0042200226", "0042200216"]  # TODO: Remove hardcode
 
     if games.get_dict()["scoreboard"]["games"]:
         for games in games.get_dict()["scoreboard"]["games"]:
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 # Home page with one input box
-# submit player name, then routes to another page 
+# submit player name, then routes to another page
 # - link can have id as the backslash, thus very easy to route
 #   - on submit, redirect to link/id
 #   - when searching for id, go in link (chatgpt this part)
