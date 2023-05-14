@@ -1,7 +1,9 @@
 import axios from "axios";
 
 export default async function handler(req, res) {
-  const gameIdResponse = await axios.get("http://127.0.0.1:5000/api/livegameid");
+  const gameIdResponse = await axios.get(
+    "http://127.0.0.1:5000/api/livegameid"
+  );
   const gameId = gameIdResponse.data;
   const idArray = [];
 

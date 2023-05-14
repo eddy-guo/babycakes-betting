@@ -1,5 +1,3 @@
-import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -148,7 +146,7 @@ export default function Home() {
 
     return (
       <div>
-        <p>Live Game {index+1}</p>
+        <p>Live Game {index + 1}</p>
         <p>Game ID: {liveStats[index]["game"]["gameId"]}</p>
         <p>Game Status: {liveStats[index]["game"]["gameStatusText"]}</p>
         <p>Game Clock: {liveStats[index]["game"]["gameClock"]}</p>
