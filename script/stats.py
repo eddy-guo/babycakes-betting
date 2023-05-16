@@ -16,32 +16,21 @@ def create_gamelog():
     season = request.args.get("season")
     season_type = request.args.get("season_type")
 
+    if name not in [player["full_name"] for player in player]:
+        return jsonify({'Error': 'Invalid name.'})
+    if not season.isdigit():
+        return jsonify({'Error': 'Invalid season.'})
+    if season_type not in ["Regular Season", "Playoffs", "Pre Season", "All-Star", "All Star"]:
+        return jsonify({'Error': 'Invalid season type.'})
+
     id = [x for x in player if x["full_name"] == name][0]["id"]
 
     data = playergamelog.PlayerGameLog(
         player_id=id, season=season, season_type_all_star=season_type).get_data_frames()[0]
     if data.empty:
-        return jsonify({'Error': 'Stats do not exist.'}), 404
+        return jsonify({'Error': 'Stats do not exist.'})
     response = data.to_dict()  # orient="records"
     return jsonify(response), 200, {'Access-Control-Allow-Origin': '*'}
-
-
-@app.route('/api/over30')
-def create_gamelog_over30():
-    name = request.args.get("name")
-    season = request.args.get("season")
-    season_type = request.args.get("season_type")
-
-    id = [x for x in player if x["full_name"] == name][0]["id"]
-
-    data = playergamelog.PlayerGameLog(
-        player_id=id, season=season, season_type_all_star=season_type).get_data_frames()[0]
-    if data.empty:
-        return jsonify({'Error': 'Stats do not exist.'}), 404
-    data_over30 = data[data["PTS"] >= 30]
-    response = data_over30.to_dict()  # orient="records"
-    return jsonify(response), 200, {'Access-Control-Allow-Origin': '*'}
-
 
 @app.route('/api/livegameid')
 def temp():

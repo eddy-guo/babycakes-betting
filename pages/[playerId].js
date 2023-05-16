@@ -47,8 +47,21 @@ function Home({ seasonStats }) {
       });
   }, []);
 
+
+  if (!seasonStats) {
+    return (
+      <div>
+        <h1>Player does not exist or input is invalid.</h1>
+      </div>
+    );
+  }
+
   const renderSeasonStats = () => {
     if (!seasonStats) return "Loading... (run stats.py!)";
+
+    if (Object.values(seasonStats) == "Invalid name.") {
+      return "Invalid player name (check letter case)."
+    }
 
     const headerLabels = [
       "Game",
